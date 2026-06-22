@@ -1,14 +1,19 @@
-import './index.css'
+import Chat from "./components/Chat";
+import Dashboard from "./components/Dashboard";
+import "./index.css";
 
-function App() {
+export default function App() {
   return (
-    <main className="app">
-      <header>
+    <div className="app">
+      <header className="app__header">
         <h1>Support Copilot Dashboard</h1>
         <p>Chat + AI ops monitoring for FoxSchool Support Copilot.</p>
       </header>
-    </main>
-  )
-}
 
-export default App
+      <div className="app__layout">
+        <Chat />
+        <Dashboard />
+      </div>
+    </div>
+  );
+}
