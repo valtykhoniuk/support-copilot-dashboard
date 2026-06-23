@@ -5,7 +5,14 @@ export interface Message {
   sources?: string[];
 }
 
-export interface AskResponse {
+export interface RuntimeMetrics {
+  latency_ms: number;
+  prompt_tokens: number;
+  completion_tokens: number;
+  cost_usd: number;
+}
+
+export interface AskResponse extends RuntimeMetrics {
   answer: string;
   sources: string[];
 }

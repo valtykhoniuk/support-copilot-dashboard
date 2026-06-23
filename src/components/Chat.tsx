@@ -1,54 +1,64 @@
 import { useState, type FormEvent } from "react";
-import type { Message, AskResponse } from "../entities/types";
+import type { Message, AskResponse, RuntimeMetrics } from "../entities/types";
 
-const Chat = () => {
+interface ChatProps {
+  onAskComplete: (metrics: RuntimeMetrics) => void;
+}
+
+const Chat = ({ onAskComplete }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    const question = input.trim()
-    if (!question || loading){
-        return;
+    e.preventDefault();
+    const question = input.trim();
+    if (!question || loading) {
+      return;
     }
     const userMessage: Message = {
-        id: crypto.randomUUID(),
-        sender: 'user',
-        text: question,
-    }
+      id: crypto.randomUUID(),
+      sender: "user",
+      text: question,
+    };
 
-    setMessages(prev => [...prev, userMessage])
-    setInput("")
-    setLoading(true)
-    setError(null)
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
+    setError(null);
 
     try {
-        const res = await fetch('/api/ask', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({question})
-        })
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
 
-        if (!res.ok){
-            throw new Error(`API error: ${res.status}`)
-        }
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
 
-        const data: AskResponse = await res.json()
+      const data: AskResponse = await res.json();
 
-        const botMessage: Message = {
-            id: crypto.randomUUID(),
-            sender: 'bot',
-            text: data.answer,
-            sources: data.sources,
-        }
+      const botMessage: Message = {
+        id: crypto.randomUUID(),
+        sender: "bot",
+        text: data.answer,
+        sources: data.sources,
+      };
 
-        setMessages((prev) => [...prev, botMessage])
-    }catch (err){
-        setError(err instanceof Error ? err.message : 'Request failed')
-    }finally {
-        setLoading(false)
+      setMessages((prev) => [...prev, botMessage]);
+      onAskComplete({
+        latency_ms: data.latency_ms ?? 0,
+        prompt_tokens: data.prompt_tokens ?? 0,
+        completion_tokens: data.completion_tokens ?? 0,
+        cost_usd: data.cost_usd ?? 0,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Request failed");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -62,7 +72,7 @@ const Chat = () => {
         {messages.map((msg) => (
           <div key={msg.id} className={`message message--${msg.sender}`}>
             <div className="message__sender">
-              {msg.sender === 'user' ? 'You' : 'Copilot'}
+              {msg.sender === "user" ? "You" : "Copilot"}
             </div>
             <div className="message__text">{msg.text}</div>
             {msg.sources && msg.sources.length > 0 && (

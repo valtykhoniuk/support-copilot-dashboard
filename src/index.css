@@ -132,6 +132,17 @@ body {
   padding: 1rem;
 }
 
+.dashboard__section-title {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.dashboard__section-title:first-of-type {
+  margin-top: 0;
+}
+
 .dashboard__grid {
   display: grid;
   gap: 0.75rem;
