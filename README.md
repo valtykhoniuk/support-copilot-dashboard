@@ -3,7 +3,7 @@
 Full-stack AI ops UI for the [FoxSchool Support Copilot](https://github.com/valtykhoniuk/support-copilot) backend — RAG chat, live request metrics, and eval suite snapshot.
 
 **Live demo (frontend):** https://support-copilot-dashboard.vercel.app  
-*(Requires `VITE_API_URL` pointing at a running backend — see [Production deploy](#production-deploy-vercel--ec2).)*
+*(Requires EC2 running + matching IP in `vercel.json` rewrites.)*
 
 ![FoxSchool Support Copilot Dashboard — chat, runtime metrics, and eval suite](docs/dashboard-demo.png)
 
@@ -32,8 +32,10 @@ Browser (Vite dev or Vercel)
    └─ GET /eval_metrics  → eval snapshot   → Dashboard
 
 Local dev:  /api/*  ──proxy──►  localhost:8000
-Production: VITE_API_URL ──────►  EC2 / Docker API (+ CORS)
+Production: /api/*  ──Vercel rewrite──►  EC2 :8000  (see vercel.json)
 ```
+
+**Why not `VITE_API_URL` on Vercel?** The site is **HTTPS**; calling `http://EC2_IP` from the browser is blocked (mixed content). Proxy via `/api` keeps everything on `https://*.vercel.app`.
 
 ## Local development
 
@@ -78,24 +80,19 @@ Default is `*` (fine for portfolio demos).
 ### Frontend (Vercel)
 
 1. Push this repo to GitHub.
-2. [Import project on Vercel](https://vercel.com/new) → select `support-copilot-dashboard`.
-3. **Environment variable** (required for production):
+2. Update **`vercel.json`** — set your EC2 IP in the `/api` rewrite `destination`.
+3. **Remove `VITE_API_URL`** from Vercel env if you added it (leave unset).
+4. Deploy / Redeploy. Build: `npm run build`, output: `dist`.
 
-   | Name | Value |
-   |------|--------|
-   | `VITE_API_URL` | `http://PUBLIC_IP:8000` |
-
-4. Deploy. Build command: `npm run build`, output: `dist`.
+When EC2 **public IP changes** after Stop → Start: edit `vercel.json` → push → redeploy.
 
 Or via CLI:
 
 ```bash
-npm i -g vercel
-vercel
-# set VITE_API_URL in Vercel dashboard → Settings → Environment Variables
+npx vercel --prod
 ```
 
-**Note:** EC2 is stopped when not demoing — start the instance and update `VITE_API_URL` if the public IP changes.
+**Note:** EC2 is stopped when not demoing — start the instance and update `vercel.json` if the IP changes.
 
 ## Eval metrics snapshot
 
@@ -117,7 +114,7 @@ src/
   components/Chat.tsx       # chat + onAskComplete(metrics)
   components/Dashboard.tsx  # runtime + eval panels
   entities/types.ts         # AskResponse, RuntimeMetrics, EvalMetrics
-  lib/api.ts                # apiUrl() — proxy vs VITE_API_URL
+  lib/api.ts                # apiUrl() — /api (local Vite or Vercel rewrite)
 ```
 
 ## Related
