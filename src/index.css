@@ -170,3 +170,9 @@ body {
   font-size: 0.8rem;
   color: #9ca3af;
 }
+
+.dashboard__error {
+  display: block;
+  margin-top: 0.25rem;
+  color: #b91c1c;
+}
