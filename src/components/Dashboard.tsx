@@ -2,6 +2,7 @@ import "../index.css";
 import type { RuntimeMetrics } from "../entities/types";
 import { useEffect, useState } from "react";
 import type { EvalMetrics } from "../entities/types";
+import { apiUrl } from "../lib/api";
 
 interface DashboardProps {
   metrics: RuntimeMetrics | null;
@@ -17,7 +18,7 @@ const Dashboard = ({ metrics }: DashboardProps) => {
 
   async function getMetrics() {
     try {
-      const response = await fetch("/api/eval_metrics");
+      const response = await fetch(apiUrl("/eval_metrics"));
       if (!response.ok) {
         throw new Error("Problem with fetching data");
       }

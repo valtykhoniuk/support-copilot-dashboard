@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import type { Message, AskResponse, RuntimeMetrics } from "../entities/types";
+import { apiUrl } from "../lib/api";
 
 interface ChatProps {
   onAskComplete: (metrics: RuntimeMetrics) => void;
@@ -29,7 +30,7 @@ const Chat = ({ onAskComplete }: ChatProps) => {
     setError(null);
 
     try {
-      const res = await fetch("/api/ask", {
+      const res = await fetch(apiUrl("/ask"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
