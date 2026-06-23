@@ -11,9 +11,19 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="app__header">
-        <h1>Support Copilot Dashboard</h1>
-        <p>Chat + AI ops monitoring for FoxSchool Support Copilot.</p>
+      <header className="app__header glass">
+        <div className="app__brand">
+          <span className="app__logo" aria-hidden="true">
+            🦊
+          </span>
+          <div>
+            <h1>
+              FoxSchool{" "}
+              <span className="app__title-accent">Support Copilot</span>
+            </h1>
+            <p>Chat + AI ops monitoring</p>
+          </div>
+        </div>
       </header>
 
       <div className="app__layout">

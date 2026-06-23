@@ -29,7 +29,7 @@ const Dashboard = ({ metrics }: DashboardProps) => {
   }
 
   return (
-    <section className="dashboard">
+    <section className="dashboard glass">
       <h2>AI Ops</h2>
 
       <h3 className="dashboard__section-title">Last request</h3>
@@ -114,7 +114,9 @@ const Dashboard = ({ metrics }: DashboardProps) => {
 
       <p className="dashboard__note">
         Runtime metrics update after each chat message.
-        {error && <span className="dashboard__error"> Eval error: {error}</span>}
+        {error && (
+          <span className="dashboard__error"> Eval error: {error}</span>
+        )}
       </p>
     </section>
   );

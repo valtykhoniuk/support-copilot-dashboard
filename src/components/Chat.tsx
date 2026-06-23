@@ -63,7 +63,7 @@ const Chat = ({ onAskComplete }: ChatProps) => {
   }
 
   return (
-    <section className="chat">
+    <section className="chat glass">
       <h2>Chat</h2>
       <div className="chat__messages">
         {messages.length === 0 && (
@@ -72,7 +72,7 @@ const Chat = ({ onAskComplete }: ChatProps) => {
         {messages.map((msg) => (
           <div key={msg.id} className={`message message--${msg.sender}`}>
             <div className="message__sender">
-              {msg.sender === "user" ? "You" : "Copilot"}
+              {msg.sender === "user" ? "You" : "Fox Copilot"}
             </div>
             <div className="message__text">{msg.text}</div>
             {msg.sources && msg.sources.length > 0 && (
@@ -84,7 +84,7 @@ const Chat = ({ onAskComplete }: ChatProps) => {
             )}
           </div>
         ))}
-        {loading && <p className="chat__loading">Thinking…</p>}
+        {loading && <p className="chat__loading">Fox is thinking…</p>}
         {error && <p className="chat__error">{error}</p>}
       </div>
       <form className="chat__form" onSubmit={handleSubmit}>
